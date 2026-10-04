@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="果安哨兵">
+  <rect width="64" height="64" rx="16" fill="#176b59"/>
+  <path d="M34 14c6-7 12-4 15-1-5 1-9 3-12 7" fill="#66d4b2"/>
+  <circle cx="31" cy="34" r="17" fill="#f1faf6"/>
+  <path d="M22 25h19v5H27v4h12v5H27v5h15v5H22z" fill="#176b59"/>
+</svg>

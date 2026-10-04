@@ -1,0 +1,7 @@
+{% extends 'base.html' %}{% load ui_tags %}
+{% block title %}告警处置 · {{ app_name }}{% endblock %}
+{% block content %}
+<div class="page-header"><div><div class="breadcrumb-text">安全中心 / 告警处置</div><h1>{{ alert.title }}</h1><p>{{ alert.description }}</p></div><span class="risk-score {{ alert.risk_level|status_class }}">{{ alert.score }}<small>/100</small></span></div>
+<div class="two-column wide-left"><section class="panel"><h2>风险评分明细</h2><div class="risk-breakdown">{% for item in breakdown %}<div><span>{{ item.label }}</span><strong>+{{ item.score }}</strong></div>{% empty %}<p>暂无分项数据。</p>{% endfor %}<div class="risk-total"><span>风险总分</span><strong>{{ alert.score }}</strong></div></div><dl class="detail-list"><div><dt>用户</dt><dd>{{ alert.user.username|default:'未知/系统' }}</dd></div><div><dt>事件类型</dt><dd>{{ alert.event.event_type }}</dd></div><div><dt>创建时间</dt><dd>{{ alert.created_at }}</dd></div><div><dt>当前状态</dt><dd><span class="status-badge {{ alert.status|status_class }}">{{ alert.status }}</span></dd></div></dl></section><section class="panel form-panel"><h2>处置记录</h2><form method="post">{% csrf_token %}{% for field in form %}<div class="field-group"><label>{{ field.label }}</label>{{ field }}{{ field.errors }}</div>{% endfor %}<button class="btn btn-primary" type="submit">保存处置结果</button></form></section></div>
+{% endblock %}
+

@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} · {{ app_name }}{% endblock %}
+{% block content %}
+<div class="page-header"><div><div class="breadcrumb-text">控制台 / 表单</div><h1>{{ title }}</h1><p>字段验证和权限检查均在服务端执行。</p></div></div>
+<section class="panel form-panel"><form method="post" novalidate>{% csrf_token %}{% if form.non_field_errors %}<div class="app-alert error">{{ form.non_field_errors }}</div>{% endif %}<div class="form-grid">{% for field in form %}<div class="field-group {% if field.field.widget.input_type == 'checkbox' %}field-checkbox{% endif %}"><label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}<span class="required">*</span>{% endif %}</label>{{ field }}{% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}{% for error in field.errors %}<div class="field-error">{{ error }}</div>{% endfor %}</div>{% endfor %}</div><div class="form-actions"><button class="btn btn-primary" type="submit">保存</button><a class="btn btn-ghost" href="{% if back_kwargs.kind %}{% url back_url kind=back_kwargs.kind %}{% else %}{% url back_url %}{% endif %}">返回</a></div></form></section>
+{% endblock %}
+

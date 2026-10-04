@@ -1,0 +1,4 @@
+{% extends 'base.html' %}
+{% block title %}{{ code }} · {{ app_name }}{% endblock %}
+{% block content %}<section class="error-state"><div class="error-code">{{ code }}</div><h1>{{ title }}</h1><p>{{ message }}</p><a class="btn btn-primary" href="{% url 'dashboard:index' %}">返回安全总览</a></section>{% endblock %}
+

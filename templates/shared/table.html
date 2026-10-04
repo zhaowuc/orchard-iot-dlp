@@ -1,0 +1,19 @@
+{% extends 'base.html' %}{% load ui_tags %}
+{% block title %}{{ title }} · {{ app_name }}{% endblock %}
+{% block content %}
+<div class="page-header"><div><div class="breadcrumb-text">控制台 / {{ title }}</div><h1>{{ title }}</h1><p>{{ subtitle }}</p></div>{% if create_url %}<a class="btn btn-primary" href="{% if kind %}{% url create_url kind=kind %}{% else %}{% url create_url %}{% endif %}">＋ 新增</a>{% endif %}</div>
+<section class="panel">
+  <form method="get" class="filter-bar">
+    <div class="search-box"><label class="visually-hidden" for="table-search">搜索</label><input id="table-search" class="form-control" name="q" value="{{ search_term }}" placeholder="搜索关键词"></div>
+    {% for filter in filters %}<select class="form-select" name="{{ filter.param }}" aria-label="{{ filter.label }}"><option value="">{{ filter.label }}：全部</option>{% for value,label in filter.choices %}<option value="{{ value }}" {% if request.GET|get_item:filter.param == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select>{% endfor %}
+    <button class="btn btn-secondary" type="submit">筛选</button>{% if request.GET %}<a class="btn btn-ghost" href="{{ request.path }}">重置</a>{% endif %}
+  </form>
+  <div class="table-responsive">
+    <table class="data-table"><thead><tr>{% for col in columns %}<th scope="col">{{ col.label }}</th>{% endfor %}{% if edit_url_name or detail_url_name %}<th scope="col">操作</th>{% endif %}</tr></thead>
+      <tbody>{% for row in rows %}<tr>{% for cell in row.cells %}<td class="{{ cell.class }}">{% if cell.badge %}<span class="status-badge {{ cell.value|status_class }}">{{ cell.value }}</span>{% else %}{{ cell.value|default:'—' }}{% endif %}</td>{% endfor %}{% if edit_url_name or detail_url_name %}<td class="actions">{% if edit_url_name %}<a href="{% if kind %}{% url edit_url_name kind=kind pk=row.object.pk %}{% else %}{% url edit_url_name pk=row.object.pk %}{% endif %}">编辑</a>{% endif %}{% if detail_url_name %}<a href="{% url detail_url_name pk=row.object.pk %}">查看</a>{% endif %}</td>{% endif %}</tr>{% empty %}<tr><td class="empty-cell" colspan="20"><strong>暂无匹配数据</strong><span>调整筛选条件或创建第一条记录。</span></td></tr>{% endfor %}</tbody>
+    </table>
+  </div>
+  {% include 'shared/pagination.html' %}
+</section>
+{% endblock %}
+

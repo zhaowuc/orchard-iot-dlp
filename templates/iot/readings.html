@@ -1,0 +1,8 @@
+{% extends 'base.html' %}{% load ui_tags %}
+{% block title %}实时与历史数据 · {{ app_name }}{% endblock %}
+{% block content %}
+<div class="page-header"><div><div class="breadcrumb-text">数据中心 / 传感器数据</div><h1>实时与历史数据</h1><p>共 {{ total }} 条授权范围内数据；设备编号和采集时间按当前角色动态脱敏。</p></div><a href="{% url 'iot:readings_api' %}" class="btn btn-ghost">查看安全 JSON API</a></div>
+<section class="panel"><form method="get" class="filter-bar">{% for field in form %}<div class="compact-field">{{ field }}</div>{% endfor %}<button class="btn btn-secondary" type="submit">筛选</button><a class="btn btn-ghost" href="{% url 'iot:readings' %}">重置</a></form>
+<div class="table-responsive"><table class="data-table"><thead><tr><th>采集时间</th><th>设备编号</th><th>果园/地块</th><th>温度 °C</th><th>湿度 %</th><th>墒情 %</th><th>光照 lux</th><th>状态</th><th>异常原因</th></tr></thead><tbody>{% for row in rows %}<tr><td class="mono">{{ row.collection_time }}</td><td class="mono">{{ row.device_code }}</td><td>{{ row.object.orchard.name }} / {{ row.object.plot.name|default:'未分配' }}</td><td>{{ row.object.temperature|default:'—' }}</td><td>{{ row.object.humidity|default:'—' }}</td><td>{{ row.object.soil_moisture|default:'—' }}</td><td>{{ row.object.light|default:'—' }}</td><td><span class="status-badge {% if row.object.is_abnormal %}danger{% else %}success{% endif %}">{% if row.object.is_abnormal %}ABNORMAL{% else %}NORMAL{% endif %}</span></td><td>{{ row.object.abnormal_reason|default:'—' }}</td></tr>{% empty %}<tr><td colspan="9" class="empty-cell"><strong>暂无传感器数据</strong><span>运行 simulate_iot 或通过设备 API 接入数据。</span></td></tr>{% endfor %}</tbody></table></div>{% include 'shared/pagination.html' %}</section>
+{% endblock %}
+

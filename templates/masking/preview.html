@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block title %}脱敏预览 · {{ app_name }}{% endblock %}
+{% block content %}
+<div class="page-header"><div><div class="breadcrumb-text">动态脱敏 / 预览</div><h1>脱敏效果预览</h1><p>测试值仅用于本次计算，不写入敏感原文日志。</p></div></div>
+<div class="two-column"><section class="panel form-panel"><form method="post">{% csrf_token %}{% for field in form %}<div class="field-group"><label>{{ field.label }}</label>{{ field }}{{ field.errors }}</div>{% endfor %}<button class="btn btn-primary" type="submit">运行预览</button></form></section><section class="preview-panel"><div class="preview-label">实时结果</div>{% if result is not None %}<div class="preview-row"><span>原始值</span><code>{{ form.cleaned_data.test_value }}</code></div><div class="preview-arrow">↓</div><div class="preview-row result"><span>脱敏值</span><code>{{ result }}</code></div><p>算法：{{ form.cleaned_data.masking_type }} · 字段：{{ form.cleaned_data.field_type }}</p>{% else %}<div class="empty-preview">选择字段和算法后运行预览</div>{% endif %}</section></div>
+{% endblock %}
+

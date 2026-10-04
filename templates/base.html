@@ -1,0 +1,78 @@
+{% load static ui_tags %}
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>{% block title %}{{ app_name }}{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+  <link rel="icon" href="{% static 'favicon.svg' %}" type="image/svg+xml">
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="app-shell">
+  <a class="skip-link" href="#main-content">跳到主要内容</a>
+  <aside class="sidebar" id="sidebar" aria-label="主导航">
+    <a class="brand" href="{% url 'dashboard:index' %}">
+      <span class="brand-mark" aria-hidden="true">果</span>
+      <span><strong>果安哨兵</strong><small>Orchard DLP Console</small></span>
+    </a>
+    <nav class="side-nav">
+      <div class="nav-section">工作台</div>
+      <a href="{% url 'dashboard:index' %}" class="nav-link {% if request.resolver_match.namespace == 'dashboard' and request.resolver_match.url_name == 'index' %}active{% endif %}"><span class="nav-dot"></span>安全总览</a>
+      <div class="nav-section">资产与数据</div>
+      <a href="{% url 'orchards:asset_list' kind='orchards' %}" class="nav-link"><span class="nav-dot"></span>果园管理</a>
+      <a href="{% url 'orchards:asset_list' kind='plots' %}" class="nav-link"><span class="nav-dot"></span>地块管理</a>
+      <a href="{% url 'orchards:asset_list' kind='gateways' %}" class="nav-link"><span class="nav-dot"></span>网关管理</a>
+      <a href="{% url 'orchards:asset_list' kind='devices' %}" class="nav-link"><span class="nav-dot"></span>设备管理</a>
+      <a href="{% url 'orchards:asset_list' kind='sources' %}" class="nav-link"><span class="nav-dot"></span>数据源管理</a>
+      <a href="{% url 'iot:readings' %}" class="nav-link"><span class="nav-dot"></span>实时与历史数据</a>
+      {% if current_role_code == 'SUPER_ADMIN' or current_role_code == 'SECURITY_ADMIN' or user.is_superuser %}
+      <div class="nav-section">数据安全</div>
+      <a href="{% url 'sensitive:fields' %}" class="nav-link"><span class="nav-dot"></span>敏感字段字典</a>
+      <a href="{% url 'sensitive:rules' %}" class="nav-link"><span class="nav-dot"></span>识别规则</a>
+      <a href="{% url 'sensitive:detections' %}" class="nav-link"><span class="nav-dot"></span>识别记录</a>
+      <a href="{% url 'masking:rules' %}" class="nav-link"><span class="nav-dot"></span>脱敏策略</a>
+      <a href="{% url 'masking:preview' %}" class="nav-link"><span class="nav-dot"></span>脱敏预览</a>
+      <a href="{% url 'masking:records' %}" class="nav-link"><span class="nav-dot"></span>脱敏记录</a>
+      <a href="{% url 'dlp:policies' %}" class="nav-link"><span class="nav-dot"></span>访问策略</a>
+      <a href="{% url 'dlp:queries' %}" class="nav-link"><span class="nav-dot"></span>查询监控</a>
+      <a href="{% url 'audit:risks' %}" class="nav-link"><span class="nav-dot"></span>风险事件</a>
+      <a href="{% url 'audit:alerts' %}" class="nav-link"><span class="nav-dot"></span>安全告警</a>
+      <a href="{% url 'audit:logs' %}" class="nav-link"><span class="nav-dot"></span>操作日志</a>
+      {% endif %}
+      <div class="nav-section">导出与运维</div>
+      <a href="{% url 'dlp:exports' %}" class="nav-link"><span class="nav-dot"></span>安全导出中心</a>
+      {% if current_role_code == 'SUPER_ADMIN' or user.is_superuser %}
+      <a href="{% url 'accounts:user_list' %}" class="nav-link"><span class="nav-dot"></span>用户管理</a>
+      <a href="{% url 'accounts:role_list' %}" class="nav-link"><span class="nav-dot"></span>角色管理</a>
+      <a href="{% url 'dashboard:configs' %}" class="nav-link"><span class="nav-dot"></span>系统参数</a>
+      {% endif %}
+    </nav>
+  </aside>
+  <div class="app-main">
+    <header class="topbar">
+      <button class="icon-button menu-toggle" type="button" aria-label="打开导航" aria-controls="sidebar" aria-expanded="false">☰</button>
+      <div class="system-health"><span class="health-dot"></span><span>安全服务运行正常</span></div>
+      <div class="topbar-actions">
+        <span class="time-chip">{{ current_time|date:'Y-m-d H:i' }}</span>
+        <span class="role-chip">{{ user.role.name|default:'未分配角色' }}</span>
+        <span class="user-name">{{ user.display_name|default:user.username }}</span>
+        <form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}<button class="btn btn-ghost btn-sm" type="submit">退出</button></form>
+      </div>
+    </header>
+    <main class="content" id="main-content" tabindex="-1">
+      {% if messages %}
+        <div class="message-stack" aria-live="polite">
+          {% for message in messages %}<div class="app-alert {{ message.tags }}">{{ message }}</div>{% endfor %}
+        </div>
+      {% endif %}
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+  <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'js/app.js' %}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

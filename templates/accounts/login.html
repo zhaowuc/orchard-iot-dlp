@@ -1,0 +1,36 @@
+{% load static %}
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>登录 · 果安哨兵</title>
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"><link rel="stylesheet" href="{% static 'css/app.css' %}">
+  <link rel="icon" href="{% static 'favicon.svg' %}" type="image/svg+xml">
+</head>
+<body class="login-page">
+  <main class="login-layout">
+    <section class="login-story" aria-label="系统介绍">
+      <div class="story-kicker"><span></span>智慧果园数据安全平台</div>
+      <h1>让每一条传感数据<br>安全流动、可控使用</h1>
+      <p>从 IoT 接入、敏感识别到动态脱敏、风险告警，形成可追溯的数据防泄漏闭环。</p>
+      <div class="story-flow" aria-label="安全闭环">
+        <div><strong>01</strong><span>可信接入</span></div><i></i><div><strong>02</strong><span>动态脱敏</span></div><i></i><div><strong>03</strong><span>审计预警</span></div>
+      </div>
+      <div class="orchard-visual" aria-hidden="true"><span class="sun"></span><span class="hill hill-one"></span><span class="hill hill-two"></span><span class="tree t1"></span><span class="tree t2"></span><span class="tree t3"></span><span class="grid-lines"></span></div>
+    </section>
+    <section class="login-panel">
+      <div class="login-card">
+        <div class="brand login-brand"><span class="brand-mark">果</span><span><strong>果安哨兵</strong><small>Orchard DLP Console</small></span></div>
+        <div class="login-heading"><h2>欢迎回来</h2><p>请使用已分配的业务账号登录</p></div>
+        {% if messages %}{% for message in messages %}<div class="app-alert {{ message.tags }}">{{ message }}</div>{% endfor %}{% endif %}
+        <form method="post" class="login-form">{% csrf_token %}
+          <label for="username">账号</label><input id="username" name="username" class="form-control" autocomplete="username" required autofocus placeholder="请输入账号">
+          <label for="password">密码</label><input id="password" type="password" name="password" class="form-control" autocomplete="current-password" required placeholder="请输入密码">
+          <button class="btn btn-primary w-100" type="submit">安全登录</button>
+        </form>
+        <p class="login-footnote">本地演示账号请查看 README。连续登录失败将触发安全审计。</p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
